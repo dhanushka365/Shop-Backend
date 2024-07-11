@@ -39,7 +39,7 @@ namespace Shop_Backend.Controllers
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.Key ?? throw new InvalidOperationException("JWT key is not configured."));
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey ?? throw new InvalidOperationException("JWT key is not configured."));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -55,6 +55,12 @@ namespace Shop_Backend.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             return Ok(new { Token = tokenString });
+        }
+
+        [HttpGet]
+        public ActionResult<List<User>> GetUsers()
+        {
+            return _userRepository.GetUsers();
         }
 
 

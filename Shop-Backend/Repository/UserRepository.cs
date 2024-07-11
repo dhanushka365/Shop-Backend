@@ -48,6 +48,11 @@ namespace Shop_Backend.Repository
                 _context.SaveChanges();
             }
         }
+
+        public List<User> GetUsers()
+        {
+            return _context.Users.ToList();
+        }
     }
 }
 

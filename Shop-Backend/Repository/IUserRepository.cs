@@ -4,6 +4,7 @@ namespace Shop_Backend.Repository
 {
     public interface IUserRepository
     {
+        List<User> GetUsers();
         User? GetUser(string username, string password);
         User? GetUserById(int id);
         void AddUser(User user);
