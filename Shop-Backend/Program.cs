@@ -11,8 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<DataContext>();
 
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings are not configured.");
-builder.Services.AddSingleton(jwtSettings); 
+// Load JWT settings from configuration
+var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
+builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+
+var jwtSettings = jwtSettingsSection.Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings are not configured.");
+builder.Services.AddSingleton(jwtSettings);
+
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -34,10 +40,12 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "https://localhost:7186", // Update with your expected issuer URL
-        ValidAudience = "your_audience", // Update with your expected audience
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes("your_secret_key_here"))
+            string.IsNullOrEmpty(jwtSettings.SecretKey) ?
+                throw new InvalidOperationException("JWT SecretKey is not configured.") :
+                Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
     };
 });
 
