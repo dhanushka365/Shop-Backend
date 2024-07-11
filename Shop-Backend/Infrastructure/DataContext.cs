@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shop_Backend.Models;
 
 namespace Shop_Backend.Infrastructure
 {
@@ -7,7 +8,8 @@ namespace Shop_Backend.Infrastructure
         protected override void OnConfiguring
         (DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase(databaseName: "ShopDb");
+            optionsBuilder.UseInMemoryDatabase(databaseName: "ShopDb");       
         }
+        public DbSet<Product> Products { get; set; }
     }
 }
