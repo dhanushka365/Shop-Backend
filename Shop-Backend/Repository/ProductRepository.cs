@@ -17,9 +17,9 @@ namespace Shop_Backend.Repository
             return _context.Products.ToList();
         }
 
-        public Product GetProductById(int id)
+        public Product? GetProductById(int id)
         {
-            return _context.Products.Find(id);
+            return _context.Products.FirstOrDefault(p => p.Id == id);
         }
 
         public void AddProduct(Product product)

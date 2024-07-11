@@ -11,5 +11,6 @@ namespace Shop_Backend.Infrastructure
             optionsBuilder.UseInMemoryDatabase(databaseName: "ShopDb");       
         }
         public DbSet<Product> Products { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
